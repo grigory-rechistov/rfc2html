@@ -1,0 +1,106 @@
+<pre>Request for Comments # 210                                     W. Conrad
+Categories  C.4                                                  Harvard
+NIC 7189                                                    16 August 71
+
+                      Improvement of Flow Control
+
+The current &quot;give back&quot; - &quot;return&quot; scheme seems to put the cart before
+the horse in that the &quot;return&quot; command indicates the amount of space
+the sending host is returning rather than the amount of space it has
+left after decrementing by the amount specified in the &quot;give back&quot;
+command.  Considering the fact that allocation counters at sending and
+receiving hosts may get out of synchronization and the fact that the
+receiving host has a preemptive priority in the allocation of its
+resources, it is only logical that the receiving host be able to find
+out exactly how much of its buffer space a sending host thinks it can
+claim.
+
+If the &quot;return&quot; command is to accurately reflect a sending host&#x27;s
+current allocation, and if successive &quot;give backs&quot; are to produce
+&quot;return&quot; commands which can be properly interpreted, certain race
+conditions must be avoided. A &quot;give back&quot; must be answered by a
+&quot;return&quot; and no more &quot;give backs&quot; can be issued until that &quot;return&quot; is
+received.  In some sense, a &quot;return&quot; command as here proposed is
+really a give back reply, and, perhaps, should implemented under that
+name. On the sending side, the &quot;return&quot; command must not be issued as
+long as a data RFNM is awaited on the link to which the &quot;return&quot;
+refers. As soon as the net is clear of data messages, the &quot;return&quot; may
+be sent and data transmission may continue when the RFNM for this
+message containing the &quot;return&quot; command is received.
+
+The current &quot;give back&quot; command uses fractions and has a format
+different from the &quot;allocate&quot; and &quot;return&quot; commands making processing
+unnecessarily complicated. By adopting the convention that allocations
+can not be decremented below zero, one can safely specify absolute
+decrements in a format like that of the &quot;allocate&quot; command. If the
+receiving host&#x27;s estimate of a suitable decrement is inaccurate, no
+harm is done and the &quot;return&quot; command in response to the &quot;give back&quot;
+provides immediate corrective information.
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">                                                                [Page 1]</span></pre>
+<hr class='noprint'/><!--NewPage--><pre class='newpage'><span id="page-2" ></span>
+<span class="grey">SUMMARY</span>
+
+          Proposal                       Advantage
+
+<span class="h2"><a class="selflink" id="section-1" href="#section-1">1</a>    &quot;Return&quot; specifies amount  </span>     Provides more pertinent
+     of space left after             information and a means
+     decrementing.                   of resynchronization other
+                                     than closing connection.
+
+<span class="h2"><a class="selflink" id="section-2" href="#section-2">2</a>    &quot;Give Back&quot; must get  </span>          Provide more accurate
+     &quot;return&quot; in reply and           allocation information
+     &quot;return&quot; must not be            by eliminating race
+     sent with data on the           conditions.
+     link.
+
+<span class="h2"><a class="selflink" id="section-3" href="#section-3">3</a>    Eliminate fractions  </span>           Eliminate messy math
+     from &quot;give back&quot;.               and provide symmetry
+                                     to allocation commands
+                                     making processing easier.
+
+
+
+       [ This RFC was put into machine readable form for entry ]
+        [ into the online RFC archives by Gunnar Reichert 6/97 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                [Page 2]
+</pre>
